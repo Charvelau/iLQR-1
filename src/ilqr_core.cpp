@@ -94,7 +94,7 @@ void iLQR::generate_trajectory() {
 #endif
 
   int iter;
-  for (iter = 0; iter < maxIter; iter++) {
+  for (iter = 0; iter < maxIter; ++iter) {
     x_old = xs;
     u_old = us;
 

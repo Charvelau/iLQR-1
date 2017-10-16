@@ -2,3 +2,5 @@ Debug/*
 build/*
 CMakeLists.txt~
 iLQG/*
+cmake-build-debug/*
+.idea
