@@ -1,15 +1,13 @@
-#include "gtest/gtest.h"
-#include "ilqr.h"
 #include "double_integrator.h"
 #include "eigen_helpers.h"
+#include "gtest/gtest.h"
+#include "ilqr.h"
 
 static const double eq_tol = 1e-2;
 
-class ILQRSetup : public ::testing::Test
-{
-public:
-  virtual void SetUp()
-  {
+class ILQRSetup : public ::testing::Test {
+ public:
+  virtual void SetUp() {
     double dt = 0.05;
     int T = 99;
     VectorXd goal(4);
@@ -23,9 +21,9 @@ public:
     x0 << 0., 0., 0., 0.;
 
     Vector2d u_init(0.1, 0.1);
-    for (int i=0; i<T; i++)  u0.push_back(u_init);
+    for (int i = 0; i < T; i++) u0.push_back(u_init);
 
-    ilqr_simple->init_traj(x0,u0);
+    ilqr_simple->init_traj(x0, u0);
   }
 
   VectorXd x0, xd;
@@ -34,20 +32,13 @@ public:
   std::shared_ptr<iLQR> ilqr_simple;
 };
 
-
-TEST_F(ILQRSetup, dDynamicsTest)
-{
+TEST_F(ILQRSetup, dDynamicsTest) {
   ilqr_simple->compute_derivatives(ilqr_simple->xs, ilqr_simple->us);
   Eigen::Matrix4d fx_expected;
-  fx_expected << 1., 0., 0.05, 0.,
-           0., 1., 0., 0.05,
-           0., 0., 1., 0.,
-           0., 0., 0., 1.;
-  Eigen::MatrixXd fu_expected(4,2);
-  fu_expected << 0., 0.,
-            0., 0.,
-            0.05, 0.,
-            0., 0.05;
+  fx_expected << 1., 0., 0.05, 0., 0., 1., 0., 0.05, 0., 0., 1., 0., 0., 0., 0.,
+      1.;
+  Eigen::MatrixXd fu_expected(4, 2);
+  fu_expected << 0., 0., 0., 0., 0.05, 0., 0., 0.05;
   // print_eigen("fx[0]", ilqr_simple->fx[0]);
   // print_eigen("fx expected", fx_expected);
   // print_eigen("fu[0]", ilqr_simple->fu[0]);
@@ -56,8 +47,7 @@ TEST_F(ILQRSetup, dDynamicsTest)
   EXPECT_TRUE(ilqr_simple->fu[0].isApprox(fu_expected, eq_tol));
 }
 
-TEST_F(ILQRSetup, dCostTest)
-{
+TEST_F(ILQRSetup, dCostTest) {
   ilqr_simple->compute_derivatives(ilqr_simple->xs, ilqr_simple->us);
   Eigen::Vector4d cx_expected;
   cx_expected << -2.0, -2.0, 0., 0.;
@@ -69,20 +59,16 @@ TEST_F(ILQRSetup, dCostTest)
   EXPECT_TRUE(ilqr_simple->cu[0].isApprox(cu_expected, eq_tol));
 }
 
-TEST_F(ILQRSetup, ddCostTest)
-{
+TEST_F(ILQRSetup, ddCostTest) {
   ilqr_simple->compute_derivatives(ilqr_simple->xs, ilqr_simple->us);
 
   Eigen::Matrix4d cxx_expected;
-  cxx_expected << 2., 0.,0., 0.,
-         0., 2., 0., 0.,
-         0., 0., 0.4, 0.,
-         0., 0., 0, 0.4;
-  Eigen::MatrixXd cxu_expected(4,2);
+  cxx_expected << 2., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0.4, 0., 0., 0., 0,
+      0.4;
+  Eigen::MatrixXd cxu_expected(4, 2);
   cxu_expected.setZero();
   Eigen::Matrix2d cuu_expected;
-  cuu_expected << 2, 0,
-         0, 2;
+  cuu_expected << 2, 0, 0, 2;
 
   // print_eigen("cxx[end]", ilqr_simple->cxx[ilqr_simple->cxx.size()-1]);
   // print_eigen("cxu[end]", ilqr_simple->cxu[ilqr_simple->cxu.size()-1]);
@@ -93,7 +79,7 @@ TEST_F(ILQRSetup, ddCostTest)
   EXPECT_TRUE(ilqr_simple->cuu[0].isApprox(cuu_expected, eq_tol));
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.0)
 project (iLQR)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-O2 -Wall -Wextra")
 
 ###
 # My stuff

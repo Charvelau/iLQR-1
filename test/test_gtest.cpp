@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 
-TEST(GTestTest, DoesItWork) {
-  EXPECT_EQ(5.0, 4.0+1);
-}
+TEST(GTestTest, DoesItWork) { EXPECT_EQ(5.0, 4.0 + 1); }
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
